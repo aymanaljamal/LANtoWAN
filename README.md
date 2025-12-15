@@ -1602,6 +1602,182 @@ Comprehensive Access Control List comparison:
 | **Flexibility** | Low | High |
 | **Use Case** | Simple filtering | Complex filtering scenarios |
 | **Example** | Block all traffic from 192.168.1.0/24 | Block HTTP from 192.168.1.2 to 10.0.0.5 |
+# Networking Show Commands Reference
+---
+
+## 1️⃣ General Router & Interface Information
+
+| Command | الوصف (عربي) | Description (English) |
+|---------|----------------|----------------------|
+| `show ip interface brief` | عرض كل الواجهات على الراوتر مع حالة IP وstatus | Shows all interfaces with IP addresses and operational status |
+| `show running-config` | عرض الإعدادات الحالية للراوتر | Displays the current running configuration |
+| `show startup-config` | عرض الإعدادات المحفوظة في النـVRAM | Displays saved configuration in NVRAM |
+| `show version` | معلومات عن النسخة، uptime، hardware، IOS | Displays router version, uptime, hardware info, and IOS version |
+| `show protocols` | عرض البروتوكولات المفعّلة وحالة الواجهات | Shows enabled protocols and interface status |
+| `show interfaces` | تفاصيل كل واجهة بما فيها errors وpackets | Shows detailed information per interface including errors and packet counts |
+
+---
+
+## 2️⃣ OSPF
+
+| Command | الوصف (عربي) | Description (English) |
+|---------|----------------|----------------------|
+| `show ip ospf` | حالة OSPF بشكل عام، Router ID، عدد LSAs | Displays general OSPF status, Router ID, and LSA counts |
+| `show ip ospf neighbor` | قائمة الجيران في OSPF وحالتهم | Displays OSPF neighbors and their state |
+| `show ip ospf interface` | تفاصيل الواجهات المشاركة في OSPF | Shows OSPF-enabled interfaces and parameters |
+| `show ip ospf database` | قاعدة بيانات LSAs في الراوتر | Shows the OSPF LSA database |
+| `show ip route ospf` | جدول التوجيه الخاص بـ OSPF فقط | Shows routes learned via OSPF |
+
+---
+
+## 3️⃣ EIGRP
+
+| Command | الوصف (عربي) | Description (English) |
+|---------|----------------|----------------------|
+| `show ip eigrp neighbors` | قائمة جيران EIGRP | Displays EIGRP neighbors |
+| `show ip eigrp topology` | جدول التوبولوجي الخاص بـ EIGRP | Shows EIGRP topology table |
+| `show ip route eigrp` | جدول التوجيه الخاص بـ EIGRP | Shows routes learned via EIGRP |
+| `show ip protocols` | تفاصيل البروتوكولات المفعّلة بما فيها EIGRP | Displays information about all enabled routing protocols |
+
+---
+
+## 4️⃣ BGP
+
+| Command | الوصف (عربي) | Description (English) |
+|---------|----------------|----------------------|
+| `show ip bgp summary` | ملخص لجيران BGP وحالتهم | Shows summary of BGP neighbors and their state |
+| `show ip bgp` | جدول التوجيه الخاص بـ BGP | Displays BGP routing table |
+| `show ip bgp neighbors` | تفاصيل الجيران لكل Peer | Shows detailed information for each BGP neighbor |
+| `show ip route bgp` | عرض الـ routes التي تعلمها BGP | Shows routes learned via BGP |
+
+---
+
+## 5️⃣ VLAN / Switching
+
+| Command | الوصف (عربي) | Description (English) |
+|---------|----------------|----------------------|
+| `show vlan brief` | عرض كل VLANs على السويتش | Shows all VLANs and their status |
+| `show mac address-table` | جدول الـ MAC Addresses | Displays MAC address table |
+| `show spanning-tree` | حالة بروتوكول الـ STP | Shows Spanning Tree Protocol status |
+| `show interface trunk` | عرض الـ trunk interfaces | Displays interfaces configured as trunks |
+
+---
+
+## 6️⃣ DHCP
+
+| Command | الوصف (عربي) | Description (English) |
+|---------|----------------|----------------------|
+| `show ip dhcp binding` | عرض قائمة العملاء المستلمين للعناوين | Shows DHCP bindings (assigned IP addresses) |
+| `show ip dhcp pool` | تفاصيل الـ DHCP pools | Displays DHCP pool details |
+| `show ip dhcp server statistics` | إحصائيات السيرفر | Displays DHCP server statistics |
+
+---
+
+## 7️⃣ ARP & Routing
+
+| Command | الوصف (عربي) | Description (English) |
+|---------|----------------|----------------------|
+| `show arp` | جدول ARP | Displays the ARP table |
+| `show ip route` | جدول التوجيه الكامل | Displays full IP routing table |
+| `show cdp neighbors` | جيران CDP على الراوتر | Shows Cisco Discovery Protocol neighbors |
+| `show cdp neighbors detail` | معلومات مفصلة عن الجيران | Displays detailed info for CDP neighbors |
+
+---
+# Networking Concepts Reference
+
+This file summarizes key networking identifiers and concepts with clear differences.
+
+---
+
+## 1️⃣ OSPF Process ID
+
+| Concept | Description | Notes |
+|---------|------------|-------|
+| Process ID | Local identifier for an OSPF instance on a router | Must be unique **per router** but does not need to match on other routers |
+| Usage | Distinguish multiple OSPF processes on the same router | Example: `router ospf 1` and `router ospf 90` can coexist on same device |
+
+---
+
+## 2️⃣ Autonomous System Number (ASN)
+
+| Concept | Description | Notes |
+|---------|------------|-------|
+| ASN | Unique identifier for a whole network (Autonomous System) | Used in BGP to identify each AS |
+| Usage | Required when establishing BGP neighbors | Example: `neighbor 10.0.0.2 remote-as 65001` |
+
+---
+
+## 3️⃣ OSPF Area ID
+
+| Concept | Description | Notes |
+|---------|------------|-------|
+| Area ID | Identifier for an OSPF area | Must match across routers within the same area |
+| Usage | Organize OSPF into multiple areas for scalability | Area 0 = backbone, other numbers = standard or stub areas |
+
+---
+
+## 4️⃣ Area Range (OSPF Summarization)
+
+| Concept | Description | Notes |
+|---------|------------|-------|
+| Area Range | Aggregates multiple subnets in an OSPF area to reduce routing table size | Configured on ABR using `area <area-id> range <network> <mask>` |
+| Example | `area 1 range 172.16.0.0 255.255.248.0` | Combines 172.16.0.0/21 subnets as one summarized route |
+
+---
+
+## 5️⃣ Private vs Public IP Ranges
+
+| Concept | Description | Example |
+|---------|------------|--------|
+| Private IP | Reserved for internal networks, not routable on the internet | 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 |
+| Public IP | Routable on the internet | Any IP outside private ranges, assigned by ISPs |
+
+---
+
+## 🔑 Quick Comparison Table
+
+| Identifier | Scope | Must Match Across Routers? | Example |
+|-----------|-------|---------------------------|--------|
+| Process ID | Local router | ❌ | `router ospf 1` |
+| ASN | Entire network | ✅ | `neighbor 10.0.0.2 remote-as 65001` |
+| Area ID | OSPF area | ✅ | `network 10.0.0.0 0.0.0.255 area 1` |
+| Area Range | ABR summarized subnets | ✅ | `area 1 range 172.16.0.0 255.255.248.0` |
+| Private/Public IP | Network addressing | Depends on usage | `192.168.1.1` private, `8.8.8.8` public |
+
+---
+
+# Networking Identifiers Reference Table
+
+This table summarizes key networking identifiers, their ranges, and usage.
+
+| Identifier           | Bit Size / Format | Allowed Range / Values        | Scope / Notes | Examples |
+|---------------------|-----------------|------------------------------|---------------|---------|
+| **OSPF Process ID**  | 16-bit          | 1 – 65535                    | Local to router; can differ between routers | `router ospf 1`, `router ospf 90` |
+| **Autonomous System Number (ASN)** | 16-bit | 0 – 65535 <br> Public: 1–64511 <br> Private: 64512–65535 | Global for BGP; must match between AS peers | `neighbor 10.0.0.2 remote-as 65001` |
+| **OSPF Area ID**     | 32-bit (IPv4 format) | 0 – 4294967295 <br> Area 0 = Backbone | Must match across routers in the same area | `network 10.0.0.0 0.0.0.255 area 1` |
+| **OSPF Area Range**  | Subnet mask + network | Depends on summarized subnets | Configured on ABR to reduce LSA flooding | `area 1 range 172.16.0.0 255.255.248.0` |
+| **Private IP**       | 32-bit IPv4      | 10.0.0.0 – 10.255.255.255 <br> 172.16.0.0 – 172.31.255.255 <br> 192.168.0.0 – 192.168.255.255 | Internal use only; not routable on internet | `192.168.1.1` |
+| **Public IP**        | 32-bit IPv4      | Any IPv4 outside private ranges | Routable on internet | `8.8.8.8` |
+| **Subnet / Mask**    | 32-bit IPv4      | /0 – /32                     | Determines number of hosts or networks | `/24 = 256 addresses` |
+| **Hosts per subnet** | Calculated from mask | 2^(32-mask) - 2             | Usable IPs per subnet | `/24 → 254 hosts`, `/21 → 2046 hosts` |
+| **Number of subnets**| Calculated from mask difference | 2^(mask difference)          | Number of smaller subnets inside a summarized range | `/21 summarizing /24 → 8 subnets` |
+
+---
+
+### Notes / Tips
+
+1. **OSPF Process ID** is local: it does **not need to match** between routers.  
+2. **ASN** is global for BGP: peers must agree on ASN.  
+3. **Area ID** must match **within the same OSPF area**.  
+4. **Area Range** is used on ABR to summarize multiple subnets.  
+5. Private IP ranges are **reserved for internal use**, public IPs are routable.  
+6. **Subnet calculations** often use powers of 2:  
+   - Hosts = 2^(32-mask) - 2  
+   - Subnets = 2^(mask difference)  
+
+---
+
+
 
 **Document Version:** 1.0  
 **Course:** ENCS4130 - Computer Networks Laboratory  
